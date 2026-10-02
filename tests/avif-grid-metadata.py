@@ -30,7 +30,7 @@ with tempfile.TemporaryDirectory() as directory:
     exif[270] = 'Exact Exif grid regression'
     exif_bytes = exif.tobytes()[6:]  # PNG eXIf and ExifTool use the TIFF payload.
     (tmp / 'source.exif').write_bytes(exif_bytes)
-    # libavif 1.2.1 PNG reader resets Exif orientation to 1; JPEG and --exif retain it.
+    # libavif normalizes embedded PNG/JPEG Exif orientation; --exif retains the supplied payload.
     exif[274] = 1
     stored_exif = exif.tobytes()[6:]
     exif[274] = 6
@@ -86,15 +86,20 @@ with tempfile.TemporaryDirectory() as directory:
                     decoded = tmp / f'{layout}.png'
                     run(BIN / 'avifdec', '-j', '1', output, decoded)
                     with Image.open(decoded) as result:
-                        assert result.size == image.size
-                        assert result.convert(image.mode).tobytes() == image.tobytes(), (alpha, mode, orientation, layout, 'pixels')
+                        expected_image = image
+                        if orientation == 'cli':
+                            expected_image = image.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
+                        elif orientation == 'exif' and mode != 'ignore':
+                            expected_image = image.transpose(Image.Transpose.ROTATE_270)
+                        assert result.size == expected_image.size, (alpha, mode, orientation, layout, result.size)
+                        assert result.convert(image.mode).tobytes() == expected_image.tobytes(), (alpha, mode, orientation, layout, 'pixels')
                 assert infos[0] == infos[1] == infos[2], infos
                 if orientation == 'cli':
                     assert any('irot' in p and '2' in p for p in infos[0]), infos
                     assert any('imir' in p and '1' in p for p in infos[0]), infos
                 print(f'Grid metadata/pixels OK: alpha={alpha} {mode} {orientation}', flush=True)
 
-    # JPEG readers extract embedded Exif orientation, unlike the PNG reader.
+    # JPEG orientation becomes an AVIF transform, and avifdec applies it to pixels.
     jpeg = tmp / 'source.jpg'
     image.convert('RGB').save(jpeg, quality=95, icc_profile=icc, exif=exif)
     packet = b'http://ns.adobe.com/xap/1.0/\0' + xmp
@@ -109,14 +114,14 @@ with tempfile.TemporaryDirectory() as directory:
                 '--icc', tmp / 'override.icc',
                 *(['--irot', '2', '--imir', '1'] if cli else []),
                 *(['--grid', '2x2'] if grid else []), jpeg, output)
-            assert metadata(output) == (override, xmp, exif_bytes)
+            assert metadata(output) == (override, xmp, stored_exif)
             info = run(BIN / 'avifdec', '--info', output).decode()
             properties.append([line.strip() for line in info.splitlines()
                                if any(key in line for key in ('irot', 'imir', 'Primaries', 'Transfer', 'Matrix', 'Range'))])
             decoded = tmp / 'jpeg-decoded.png'
             run(BIN / 'avifdec', '-j', '1', output, decoded)
             with Image.open(decoded) as result:
-                assert result.size == (128, 192)
+                assert result.size == ((128, 192) if cli else (192, 128))
                 pixels.append(result.convert('RGB').tobytes())
         assert properties[0] == properties[1], properties
         assert any('irot' in p and ('2' if cli else '3') in p for p in properties[0]), properties

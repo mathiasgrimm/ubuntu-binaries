@@ -1,0 +1,58 @@
+{
+  "platform": "linux/amd64",
+  "runtime": "Ubuntu 24.04",
+  "artifacts": {
+    "bin/jpegoptim": {
+      "bytes": 719304,
+      "sha256": "1f0b4878a559a4afebab01a24cb1bcaa7debe5478d8ef79eca594f4e04618397"
+    },
+    "bin/optipng": {
+      "bytes": 350384,
+      "sha256": "bcd058446321ca1674e760592604315662b8995b1ebaef2a276a4a1a080f5bbf"
+    },
+    "bin/pngquant": {
+      "bytes": 1212800,
+      "sha256": "451f98eaa5b7b2ca62c97b3e5e61dc477437fbb4710feb834be3e45403e9720f"
+    },
+    "bin/cwebp": {
+      "bytes": 1534568,
+      "sha256": "9b50c4e2e266c7776da556cd09f4a2aac39da725b5d3e38149c820bb7ea317d7"
+    },
+    "bin/dwebp": {
+      "bytes": 1108600,
+      "sha256": "5d5909585848def31b90596dadd7b36ac5c7442958287e74b0fb5976416ef18f"
+    },
+    "bin/avifenc": {
+      "bytes": 11695496,
+      "sha256": "192a68f2f54e14a30a008ff236c321413054d03a445e56f2db32f809c3bc7c69"
+    },
+    "bin/avifdec": {
+      "bytes": 11646344,
+      "sha256": "8a04de69593a737ae7cced3656062134c94ce011fdb0e4a199b7a1ba65aba388"
+    },
+    "bin/gifsicle": {
+      "bytes": 293736,
+      "sha256": "3d57bfb3aac6fd56b9f8d17669158919341903e22a1f71f5afec4b07435b2d47"
+    },
+    "bin/ffmpeg": {
+      "bytes": 45473144,
+      "sha256": "6d2f4fc737065849fc428622250dee7a3be749d5efb256a89c7d005f17ce9f4d"
+    },
+    "bin/ffprobe": {
+      "bytes": 45264184,
+      "sha256": "d51afae845c8380461f93e327545f2bc4fce218d7c7e54a93e47c92e70a03e7c"
+    },
+    "bin/magick": {
+      "bytes": 8816008,
+      "sha256": "f3b266a5eef59f2b2dee19840e4cb847ec5f513ae1720a1e05d2837f3b640905"
+    },
+    "bin/zstd": {
+      "bytes": 1611464,
+      "sha256": "60f7feab7f015568055234bd515d6da283cd7aee71e2aa31c2e3020ebf7b14da"
+    },
+    "bin/qpdf": {
+      "bytes": 3602144,
+      "sha256": "d25bbeebf3aed8ea0d3b754013f726523f8f84aa30e1c4580b993b9f5cc8db8e"
+    }
+  }
+}

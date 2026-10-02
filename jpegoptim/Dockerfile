@@ -1,7 +1,8 @@
-FROM alpine:latest AS builder
+FROM alpine:3.23 AS builder
 
 RUN apk add --no-cache \
     build-base \
+    file \
     cmake \
     git \
     libjpeg-turbo-dev \

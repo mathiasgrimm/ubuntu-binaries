@@ -7,16 +7,16 @@ trap 'rm -rf "$tmp"' EXIT HUP INT TERM
 
 # Check the committed artifacts, not only the Docker builder's outputs.
 for binary in avifenc avifdec; do
-    file "$BIN_DIR/$binary" | grep -Eq 'ARM aarch64.*(statically linked|static-pie linked).*stripped$'
-    readelf -h "$BIN_DIR/$binary" | grep -q 'Machine:.*AArch64'
+    file "$BIN_DIR/$binary" | grep -Eq 'x86-64.*(statically linked|static-pie linked).*stripped$'
+    readelf -h "$BIN_DIR/$binary" | grep -q 'Machine:.*Advanced Micro Devices X86-64'
     if readelf -l "$BIN_DIR/$binary" | grep -q INTERP ||
        readelf -d "$BIN_DIR/$binary" | grep -q NEEDED; then
         echo "ERROR: $binary requires a dynamic loader or library" >&2
         exit 1
     fi
     "$BIN_DIR/$binary" --version > "$tmp/version"
-    grep -q 'Version: 1.2.1' "$tmp/version"
-    grep -q 'dav1d \[dec\]:1.5.1' "$tmp/version"
+    grep -q 'Version: 1.4.2' "$tmp/version"
+    grep -q 'dav1d \[dec\]:1.5.4' "$tmp/version"
     grep -q 'aom \[enc/dec\]' "$tmp/version"
 done
 
@@ -68,4 +68,4 @@ done
 "$BIN_DIR/magick" "$tmp/lossless.png" -depth 8 "rgba:$tmp/input.rgba"
 "$BIN_DIR/magick" "$tmp/roundtrip.png" -depth 8 "rgba:$tmp/output.rgba"
 cmp "$tmp/input.rgba" "$tmp/output.rgba"
-echo 'Static ARM64 AVIF, default dav1d, AOM encoding/fallback and pixel parity OK'
+echo 'Static AMD64 AVIF, default dav1d, AOM encoding/fallback and pixel parity OK'

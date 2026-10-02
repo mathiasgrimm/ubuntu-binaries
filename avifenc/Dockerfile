@@ -1,10 +1,12 @@
-FROM alpine:latest AS builder
+FROM alpine:3.23 AS builder
 
 RUN apk add --no-cache \
     build-base \
+    file \
     cmake \
     meson \
     ninja \
+    nasm \
     file \
     git \
     aom-dev \
@@ -19,7 +21,7 @@ RUN apk add --no-cache \
 ARG VERSION
 RUN git clone --depth 1 --branch ${VERSION} https://github.com/AOMediaCodec/libavif.git /src/libavif
 
-# Match libavif v1.2.1's tested dav1d pin and verify the tag's commit.
+# Verify the selected stable dav1d tag against its recorded commit.
 # AVIF_CODEC_DAV1D=LOCAL builds this source as a static archive via Meson.
 ARG DAV1D_VERSION
 ARG DAV1D_COMMIT
@@ -27,9 +29,6 @@ RUN git clone --depth 1 --branch ${DAV1D_VERSION} https://code.videolan.org/vide
     test "$(git -C /src/libavif/ext/dav1d rev-parse HEAD)" = "${DAV1D_COMMIT}"
 
 WORKDIR /src/libavif
-
-COPY patches/grid-metadata.patch /tmp/grid-metadata.patch
-RUN git apply --check /tmp/grid-metadata.patch && git apply /tmp/grid-metadata.patch
 
 # Remove dynamic libs (except libz which cmake needs) to force static linking
 RUN rm -f /usr/lib/libaom.so* /usr/lib/libpng*.so* /usr/lib/libjpeg*.so* /usr/lib/libturbojpeg*.so* && \
@@ -58,7 +57,7 @@ RUN strip /src/libavif/build/avifenc /src/libavif/build/avifdec
 RUN for binary in /src/libavif/build/avifenc /src/libavif/build/avifdec; do \
       file "$binary" && \
       file "$binary" | grep -Eq 'statically linked|static-pie linked' && \
-      readelf -h "$binary" | grep -q 'Machine:.*AArch64' && \
+      readelf -h "$binary" | grep -q 'Machine:.*Advanced Micro Devices X86-64' && \
       ! readelf -l "$binary" | grep -q INTERP && \
       ! readelf -d "$binary" | grep -q NEEDED || exit 1; \
     done

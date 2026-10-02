@@ -1,7 +1,8 @@
-FROM alpine:latest AS builder
+FROM alpine:3.23 AS builder
 
 RUN apk add --no-cache \
     build-base \
+    file \
     cmake \
     pkgconf \
     git \
@@ -24,7 +25,7 @@ RUN apk add --no-cache \
     brotli-dev \
     brotli-static
 
-# Build libtiff from source (static) — Alpine package lacks tiff-static
+# Build libtiff from source (static) - Alpine package lacks tiff-static
 RUN git clone --depth 1 --branch v4.7.0 https://gitlab.com/libtiff/libtiff.git /src/libtiff && \
     cd /src/libtiff && \
     cmake -B build \

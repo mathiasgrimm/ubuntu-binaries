@@ -25,7 +25,7 @@ test -s "$tmp/decoded"
 # Animated WebP may store changed rectangles; coalesce before checking dimensions.
 test "$("$BIN_DIR/magick" "webp:$tmp/decoded" -coalesce -format '%w,%h\n' info:)" = "$(printf '16,16\n16,16\n16,16')"
 
-# Exercise the bundled ImageMagick too; 7.1.1-43 also passes -lossless 1.
+# Exercise the bundled ImageMagick delegate as well.
 test "$(PATH="$BIN_DIR:$PATH" "$BIN_DIR/magick" "APNG:$tmp/input.png" \
     -coalesce -format '%w,%h\n' info:)" = "$(printf '16,16\n16,16\n16,16')"
 
@@ -34,4 +34,13 @@ test "$(PATH="$BIN_DIR:$PATH" "$BIN_DIR/magick" "APNG:$tmp/input.png" \
     -an -f rawvideo -y -pix_fmt rgba -vcodec pam "$tmp/decoded.pam"
 test "$("$BIN_DIR/magick" "$tmp/decoded.pam" -format '%w,%h\n' info:)" = "$(printf '16,16\n16,16\n16,16')"
 
-echo 'FFmpeg WebP encoding and APNG delegates OK'
+# PAM must preserve every decoded RGBA sample, including through the delegate.
+"$BIN_DIR/ffmpeg" -nostdin -v error -i "$tmp/input.png" \
+    -f rawvideo -pix_fmt rgba "$tmp/expected.rgba"
+"$BIN_DIR/magick" "$tmp/decoded.pam" -depth 8 "rgba:$tmp/pam.rgba"
+cmp "$tmp/expected.rgba" "$tmp/pam.rgba"
+PATH="$BIN_DIR:$PATH" "$BIN_DIR/magick" -define video:intermediate-format=pam \
+    "APNG:$tmp/input.png" -coalesce -depth 8 "rgba:$tmp/delegate.rgba"
+cmp "$tmp/expected.rgba" "$tmp/delegate.rgba"
+
+echo 'FFmpeg WebP encoding and pixel-exact PAM APNG delegates OK'

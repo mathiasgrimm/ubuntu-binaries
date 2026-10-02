@@ -3,11 +3,11 @@
 This package distributes pre-compiled binaries built from third-party open source
 projects. The MIT license in [`LICENSE`](LICENSE) covers **only this repository's own
 build scripts** (the Makefile and the Dockerfiles). It does **not** cover the binaries
-in `bin/` — each of those is governed by its upstream project's license, listed below.
+in `bin/` - each of those is governed by its upstream project's license, listed below.
 
 **Several of the binaries are copyleft (GPL).** If you redistribute this package, or
 redistribute an application that bundles these binaries, those licenses impose
-obligations on you — most notably passing along the license text and making the
+obligations on you - most notably passing along the license text and making the
 corresponding source available. See [Source code](#source-code) below.
 
 ## Binaries
@@ -15,21 +15,21 @@ corresponding source available. See [Source code](#source-code) below.
 | Binary | Upstream project | Version | License | Full text |
 |--------|------------------|---------|---------|-----------|
 | `jpegoptim` | [tjko/jpegoptim](https://github.com/tjko/jpegoptim) | `v1.5.6` | `GPL-3.0-or-later` | [GPL-3.0.txt](licenses/GPL-3.0.txt) |
-| `optipng` | [OptiPNG](https://optipng.sourceforge.net/) | `0.7.8` | `Zlib` | [optipng.txt](licenses/optipng.txt) |
+| `optipng` | [OptiPNG](https://optipng.sourceforge.net/) | `7.9.1` | `Zlib` | [optipng.txt](licenses/optipng.txt) |
 | `pngquant` | [kornelski/pngquant](https://github.com/kornelski/pngquant) | `3.0.3` | `GPL-3.0-or-later` | [pngquant.txt](licenses/pngquant.txt) |
-| `cwebp`, `dwebp` | [libwebp](https://chromium.googlesource.com/webm/libwebp) | `v1.5.0` | `BSD-3-Clause` | [libwebp.txt](licenses/libwebp.txt) |
-| `avifenc`, `avifdec` | [AOMediaCodec/libavif](https://github.com/AOMediaCodec/libavif) | `v1.2.1` | `BSD-2-Clause` | [libavif.txt](licenses/libavif.txt) |
+| `cwebp`, `dwebp` | [libwebp](https://chromium.googlesource.com/webm/libwebp) | `v1.6.0` | `BSD-3-Clause` | [libwebp.txt](licenses/libwebp.txt) |
+| `avifenc`, `avifdec` | [AOMediaCodec/libavif](https://github.com/AOMediaCodec/libavif) | `v1.4.2` | `BSD-2-Clause` | [libavif.txt](licenses/libavif.txt) |
 | `gifsicle` | [kohler/gifsicle](https://github.com/kohler/gifsicle) | `v1.96` | `GPL-2.0-only` | [GPL-2.0.txt](licenses/GPL-2.0.txt) |
-| `ffmpeg`, `ffprobe` | [FFmpeg](https://github.com/FFmpeg/FFmpeg) | `n7.1.1` | `GPL-2.0-or-later` | [GPL-2.0.txt](licenses/GPL-2.0.txt) |
-| `magick` | [ImageMagick](https://github.com/ImageMagick/ImageMagick) | `7.1.1-43` | `ImageMagick` | [imagemagick.txt](licenses/imagemagick.txt) |
+| `ffmpeg`, `ffprobe` | [FFmpeg](https://github.com/FFmpeg/FFmpeg) | `n9.0.2` | `GPL-2.0-or-later` | [GPL-2.0.txt](licenses/GPL-2.0.txt) |
+| `magick` | [ImageMagick](https://github.com/ImageMagick/ImageMagick) | `7.1.2-32` | `ImageMagick` | [imagemagick.txt](licenses/imagemagick.txt) |
 | `zstd` | [facebook/zstd](https://github.com/facebook/zstd) | `v1.5.7` | `BSD-3-Clause` | [zstd.txt](licenses/zstd.txt) |
-| `qpdf` | [qpdf/qpdf](https://github.com/qpdf/qpdf) | `v12.4.0` | `Apache-2.0` | [Apache-2.0.txt](licenses/Apache-2.0.txt), [RSA-MD.txt](licenses/RSA-MD.txt) |
+| `qpdf` | [qpdf/qpdf](https://github.com/qpdf/qpdf) | `v12.4.2` | `Apache-2.0` | [Apache-2.0.txt](licenses/Apache-2.0.txt), [RSA-MD.txt](licenses/RSA-MD.txt) |
 
 ### Why ffmpeg and ffprobe are GPL, not LGPL
 
 FFmpeg is LGPL-2.1-or-later by default. This package builds it with `--enable-gpl`
 plus `--enable-libx264` and `--enable-libx265`. Per FFmpeg's own
-[`LICENSE.md`](https://github.com/FFmpeg/FFmpeg/blob/n7.1.1/LICENSE.md):
+[`LICENSE.md`](https://github.com/FFmpeg/FFmpeg/blob/n9.0.2/LICENSE.md):
 
 > Some optional parts of FFmpeg are licensed under the GNU General Public License
 > version 2 or later (GPL v2+). […] None of these parts are used by default, you have
@@ -47,7 +47,7 @@ available from their respective vendors if you need to avoid the GPL.
 closure carries a copyleft obligation: zlib, libjpeg-turbo and musl are permissive, and
 libstdc++ and libgcc are `GPL-3.0-or-later WITH GCC-exception-3.1`, whose Runtime Library
 Exception permits conveying the combination "under terms of your choice, consistent with
-the licensing of the Independent Modules" — here Apache-2.0 and permissive. `qpdf` is
+the licensing of the Independent Modules" - here Apache-2.0 and permissive. `qpdf` is
 therefore **not** covered by the corresponding-source offer below.
 
 It does carry obligations of its own. Apache-2.0 section 4(d) requires anyone
@@ -74,11 +74,11 @@ does not discharge the requirement. Accordingly, and using the license's own wor
 > Algorithm.
 
 `RSA-MD` further requires that "these notices must be retained in any copies of any part
-of this documentation and/or software". The complete notice — both grants, the copyright
-line, and the warranty disclaimer — is reproduced at
+of this documentation and/or software". The complete notice - both grants, the copyright
+line, and the warranty disclaimer - is reproduced at
 [`licenses/RSA-MD.txt`](licenses/RSA-MD.txt).
 
-qpdf can optionally delegate encryption to GnuTLS (`LGPL-2.1-or-later`) or OpenSSL —
+qpdf can optionally delegate encryption to GnuTLS (`LGPL-2.1-or-later`) or OpenSSL -
 `Apache-2.0` from OpenSSL 3.0 onward, but qpdf accepts `openssl >= 1.1.0`, and those
 older releases are under the OpenSSL and SSLeay licenses instead. Neither provider
 compiles `MD5_native.cc`. This build uses neither: it is configured with
@@ -93,28 +93,28 @@ dependencies. The notable ones, by binary:
 | Binary | Statically linked components |
 |--------|------------------------------|
 | `jpegoptim` | libjpeg-turbo (`IJG AND BSD-3-Clause AND Zlib`) |
-| `optipng` | libpng (`Libpng`), zlib (`Zlib`) |
+| `optipng` | libpng (`Libpng`), zlib (`Zlib`), cexcept (`Zlib`, [license](licenses/cexcept.txt)), minitiff/pnmio (`BSL-1.0`, [license](licenses/BSL-1.0.txt)) |
 | `pngquant` | libpng, zlib, Little CMS (`MIT`) |
-| `cwebp`, `dwebp` | libpng, libjpeg-turbo, giflib (`MIT`), libtiff (`libtiff`), zlib |
-| `avifenc`, `avifdec` | dav1d `1.5.1` (`BSD-2-Clause`, [license](licenses/dav1d.txt)), libaom (`BSD-2-Clause` + AOM patent license), libpng, libjpeg-turbo, zlib |
-| `gifsicle` | — |
-| `ffmpeg`, `ffprobe` | x264 (`GPL-2.0-or-later`), x265 `4.1` (`GPL-2.0`), libvpx `v1.15.0` (`BSD-3-Clause`), Opus `v1.5.2` (`BSD-3-Clause`), libwebp `v1.5.0` (`BSD-3-Clause`, [license](licenses/libwebp.txt)), LAME (`LGPL-2.1-or-later`), FreeType (`FTL OR GPL-2.0-or-later`), libpng, zlib, bzip2 (`bzip2-1.0.6`), Brotli (`MIT`) |
+| `cwebp`, `dwebp` | libpng, libjpeg-turbo, giflib (`MIT`), zlib |
+| `avifenc`, `avifdec` | dav1d `1.5.4` (`BSD-2-Clause`, [license](licenses/dav1d.txt)), libaom (`BSD-2-Clause` + AOM patent license), libargparse (`MIT`, [license](licenses/libargparse.txt)), libpng, libjpeg-turbo, zlib |
+| `gifsicle` | - |
+| `ffmpeg`, `ffprobe` | x264 (`GPL-2.0-or-later`), x265 `4.1` (`GPL-2.0`), libvpx `v1.15.0` (`BSD-3-Clause`), Opus `v1.5.2` (`BSD-3-Clause`), libwebp `v1.6.0` (`BSD-3-Clause`, [license](licenses/libwebp.txt)), LAME (`LGPL-2.1-or-later`), FreeType (`FTL OR GPL-2.0-or-later`), libpng, zlib, bzip2 (`bzip2-1.0.6`), Brotli (`MIT`) |
 | `magick` | libjpeg-turbo, libpng, libwebp, FreeType, libxml2 (`MIT`), libtiff `v4.7.0`, zlib, xz/liblzma (`0BSD`), bzip2, Brotli |
 | `zstd` | zlib, xz/liblzma, LZ4 (`BSD-2-Clause`) |
 | `qpdf` | zlib, libjpeg-turbo, and qpdf's built-in crypto provider: Rijndael/AES (public domain), sha2 from sphlib (`MIT`), MD5 derived from the RSA Data Security, Inc. MD5 Message-Digest Algorithm (`RSA-MD`) |
 
-Every gcc-built binary above also contains libgcc, and `qpdf`, `ffmpeg` and `ffprobe`
-additionally contain libstdc++ — qpdf is C++, and ffmpeg/ffprobe pull it in through x265.
+Every gcc-built binary above also contains libgcc, and `avifenc`, `avifdec`, `qpdf`, `ffmpeg` and `ffprobe`
+additionally contain libstdc++ - qpdf and libargparse use C++, and ffmpeg/ffprobe pull it in through x265.
 (`magick` is C and contains neither libstdc++ nor any other C++ runtime. `pngquant` is
 built with Rust rather than gcc, so it carries the `compiler_builtins` crate
-— `Apache-2.0 OR MIT` — in place of libgcc.) Both GCC libraries are
+- `Apache-2.0 OR MIT` - in place of libgcc.) Both GCC libraries are
 `GPL-3.0-or-later WITH GCC-exception-3.1`. The GCC Runtime Library Exception permits
 conveying such a combination "under terms of your choice, consistent with the licensing of
-the Independent Modules", so their presence adds no copyleft obligation of its own —
+the Independent Modules", so their presence adds no copyleft obligation of its own -
 `ffmpeg` and `ffprobe` are GPL for unrelated reasons, via x264 and x265.
 
 Unversioned components above are the Alpine Linux packages current at build time; the
-`alpine:latest` base image and its `apk` packages are not pinned, so exact versions
+`alpine:3.23` base image and its `apk` packages are not pinned, so exact versions
 vary by build date. Primary upstream tool versions and the dav1d version/commit are pinned in the
 `Makefile`. The [AVIF build record](avifenc/BUILD.md) lists the dependency versions
 used for the shipped AVIF artifacts.
@@ -139,5 +139,5 @@ package version you received.
 
 This summary is provided in good faith and is not legal advice. It reflects the
 licenses of the pinned upstream versions at the time of writing. If you redistribute
-these binaries — particularly in a commercial product — review the obligations
+these binaries - particularly in a commercial product - review the obligations
 yourself, and re-check this file after any version bump in the `Makefile`.

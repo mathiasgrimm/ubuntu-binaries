@@ -1,7 +1,8 @@
-FROM alpine:latest AS builder
+FROM alpine:3.23 AS builder
 
 RUN apk add --no-cache \
     build-base \
+    file \
     autoconf \
     automake \
     cmake \
@@ -26,7 +27,7 @@ RUN apk add --no-cache \
     brotli-static \
     diffutils
 
-# Build x265 from source (static) — Alpine package lacks .a
+# Build x265 from source (static) - Alpine package lacks .a
 # Patch CMakeLists.txt for CMake 4.x compatibility
 RUN git clone --depth 1 -b 4.1 https://bitbucket.org/multicoreware/x265_git.git /src/x265 && \
     cd /src/x265 && \
@@ -42,13 +43,13 @@ RUN git clone --depth 1 -b 4.1 https://bitbucket.org/multicoreware/x265_git.git 
     make -j$(nproc) && make install && \
     sed -i 's/Libs.private:.*/Libs.private: -lstdc++ -lm -ldl -lpthread/' /usr/local/lib/pkgconfig/x265.pc
 
-# Build libvpx from source (static) — Alpine package lacks .a
+# Build libvpx from source (static) - Alpine package lacks .a
 RUN git clone --depth 1 --branch v1.15.0 https://chromium.googlesource.com/webm/libvpx.git /src/libvpx && \
     cd /src/libvpx && \
     ./configure --disable-shared --enable-static --disable-examples --disable-tools --disable-unit-tests && \
     make -j$(nproc) && make install
 
-# Build opus from source (static) — Alpine package lacks .a
+# Build opus from source (static) - Alpine package lacks .a
 RUN git clone --depth 1 --branch v1.5.2 https://github.com/xiph/opus.git /src/opus && \
     cd /src/opus && \
     cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DOPUS_BUILD_PROGRAMS=OFF -DOPUS_BUILD_TESTING=OFF && \

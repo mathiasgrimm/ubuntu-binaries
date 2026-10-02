@@ -1,9 +1,8 @@
-FROM alpine:latest AS builder
+FROM rust:alpine3.23 AS builder
 
 RUN apk add --no-cache \
     build-base \
-    cargo \
-    rust \
+    file \
     git \
     libpng-dev \
     libpng-static \

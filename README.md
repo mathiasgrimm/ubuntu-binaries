@@ -1,289 +1,87 @@
-<p align="center">
-    <img src="https://raw.githubusercontent.com/mathiasgrimm/laravel-cloud-binaries/main/art/banner.avif" alt="Laravel Cloud Binaries" width="100%">
-</p>
+# Ubuntu Binaries
 
-# Laravel Cloud Binaries
+Static command-line binaries for **Ubuntu 24.04 AMD64 (x86_64)**, distributed as a Composer package. No Laravel or hosting provider is required.
 
-> Pre-built static binaries for Laravel Cloud. Ready in `vendor/bin`, no system packages required.
+Derived from [mathiasgrimm/laravel-cloud-binaries](https://github.com/mathiasgrimm/laravel-cloud-binaries). The build recipes use Alpine/musl to produce self-contained Linux executables; the supported runtime is tested on Ubuntu 24.04 AMD64. These binaries do not run natively on macOS or ARM64.
 
-<p align="left">
-    <a href="https://packagist.org/packages/mathiasgrimm/laravel-cloud-binaries"><img src="https://img.shields.io/packagist/v/mathiasgrimm/laravel-cloud-binaries.svg?style=flat-square" alt="Latest Version on Packagist"></a>
-    <a href="https://github.com/mathiasgrimm/laravel-cloud-binaries/actions/workflows/test.yml"><img src="https://img.shields.io/github/actions/workflow/status/mathiasgrimm/laravel-cloud-binaries/test.yml?branch=main&label=tests&style=flat-square" alt="Tests"></a>
-    <a href="https://packagist.org/packages/mathiasgrimm/laravel-cloud-binaries"><img src="https://img.shields.io/packagist/dt/mathiasgrimm/laravel-cloud-binaries.svg?style=flat-square" alt="Total Downloads"></a>
-    <a href="THIRD-PARTY-NOTICES.md"><img src="https://img.shields.io/badge/license-MIT%20%2B%20GPL%20%2B%20others-blue.svg?style=flat-square" alt="License"></a>
-</p>
+This package is under development. It has not been published to Packagist or released yet.
 
-> [!NOTE]
-> This is an independent, community package. It is not an official or
-> first-party Laravel package, and is not affiliated with, endorsed by, or
-> sponsored by Laravel or Laravel Cloud. "Laravel" is a trademark of its
-> respective owner.
+## Included tools
 
-Pre-built, statically compiled binaries for Linux (arm64/musl). Designed to be installed as a Composer package so that `vendor/bin/` contains ready-to-use tools on Laravel Cloud (or any Linux arm64 environment).
+`jpegoptim`, `optipng`, `pngquant`, `cwebp`, `dwebp`, `avifenc`, `avifdec`, `gifsicle`, `ffmpeg`, `ffprobe`, `magick`, `zstd`, and `qpdf`.
 
-This package includes all the binaries required by [spatie/image-optimizer](https://github.com/spatie/image-optimizer), making it a drop-in solution for image optimization on environments where system packages are not available. Note that [svgo](https://github.com/svg/svgo) is not included as it is a regular npm package and can be installed via `npm install -g svgo`.
+SVGO is an npm package and is not included. Bundled ImageMagick is a standalone executable; it does not replace the library used by PHP's Imagick extension.
 
-Beyond image optimization, it also ships `ffmpeg`/`ffprobe` for media, `zstd` for compression, and `qpdf` for PDF manipulation.
+## Installation and PATH
 
-## Binaries included
+After publication:
 
-| Binary | Purpose |
-|--------|---------|
-| `jpegoptim` | JPEG optimization |
-| `optipng` | PNG optimization |
-| `pngquant` | PNG lossy compression |
-| `cwebp` | WebP encoding |
-| `dwebp` | WebP decoding |
-| `avifenc` | AVIF encoding |
-| `avifdec` | AVIF decoding |
-| `gifsicle` | GIF optimization |
-| `ffmpeg` | Audio/video transcoding |
-| `ffprobe` | Media stream analysis |
-| `magick` | ImageMagick 7 (replaces convert/identify/mogrify) |
-| `zstd` | Zstandard compression/decompression |
-| `qpdf` | PDF transformation (merge, split, encrypt, linearize) |
-
-All binaries are statically linked against musl libc (Alpine Linux) and built for **arm64** (aarch64). They will **not** run on macOS, nor on x86-64 (amd64) Linux hosts — this is expected.
-
-## Pinned versions
-
-Primary upstream versions are defined at the top of the `Makefile` and passed to each Dockerfile via `--build-arg`. To bump a version, change its variable in the Makefile. The dav1d dependency also has a verified commit pin.
-
-| Binary | Variable | Current version | Size |
-|--------|----------|-----------------|------|
-| jpegoptim | `JPEGOPTIM_VERSION` | `v1.5.6` | 642 KB |
-| optipng | `OPTIPNG_VERSION` | `0.7.8` | 386 KB |
-| pngquant | `PNGQUANT_VERSION` | `3.0.3` | 1.1 MB |
-| cwebp | `LIBWEBP_VERSION` | `v1.5.0` | 1.1 MB |
-| dwebp | `LIBWEBP_VERSION` | `v1.5.0` | 834 KB |
-| avifenc | `LIBAVIF_VERSION` | `v1.2.1` | 7.6 MB |
-| avifdec | `LIBAVIF_VERSION` | `v1.2.1` | 7.6 MB |
-| gifsicle | `GIFSICLE_VERSION` | `v1.96` | 323 KB |
-| ffmpeg | `FFMPEG_VERSION` | `n7.1.1` | 29 MB |
-| ffprobe | `FFMPEG_VERSION` | `n7.1.1` | 29 MB |
-| magick | `IMAGEMAGICK_VERSION` | `7.1.1-43` | 7.8 MB |
-| zstd | `ZSTD_VERSION` | `v1.5.7` | 1.5 MB |
-| qpdf | `QPDF_VERSION` | `v12.4.0` | 3.3 MB |
-| **Total** | | | **91 MB** |
-
-### AVIF decoder
-
-`avifdec input.avif output.png` uses statically linked dav1d 1.5.1 by default.
-`avifenc` continues to use AOM, and `avifdec --codec aom` retains the explicit
-AOM decoder fallback. Executable paths and CLI options are unchanged. Portable
-applications can omit `--codec`, including on hosts with AOM-only libavif tools.
-
-The purpose is lower decoding memory use, not a speed guarantee. Both AVIF
-binaries remain libavif v1.2.1 and require no shared codec libraries. See
-[AVIF build provenance](avifenc/BUILD.md) for dependency versions, upstream
-selection logic, artifact hashes and the approximately 1.8 MiB combined size increase.
-
-## Installation
-
-```bash
-composer require mathiasgrimm/laravel-cloud-binaries
+```sh
+composer require mathiasgrimm/ubuntu-binaries
 ```
 
-Composer will symlink all 13 binaries into `vendor/bin/`.
+Executables live in `vendor/mathiasgrimm/ubuntu-binaries/bin`. Composer also creates convenience proxies in `vendor/bin`. Use the dedicated package directory when other packages provide executables with the same names.
 
-## Selective installation (faster deploys)
+For shell commands:
 
-If you only need a few binaries, you can install the package as a dev dependency, copy just the ones you need into your repository, and avoid downloading the full ~91 MB on every deploy:
-
-```bash
-composer require --dev mathiasgrimm/laravel-cloud-binaries
-
-# Copy only the binaries you need into your project
-mkdir -p bin
-cp vendor/bin/jpegoptim bin/
-cp vendor/bin/optipng bin/
-cp vendor/bin/pngquant bin/
-
-# Commit them
-git add bin/
-git commit -m "Add image optimization binaries"
+```sh
+export PATH="$PWD/vendor/mathiasgrimm/ubuntu-binaries/bin:$PATH"
 ```
 
-Then reference them from your application using `base_path('bin/jpegoptim')` (or whichever path you chose). Since the binaries are committed to your repository, they are available immediately during deployment with no Composer overhead.
+For Laravel, add this to `app/Providers/AppServiceProvider.php`, preserving your existing boot logic:
 
-To keep your committed binaries in sync automatically when the package is updated, add a `post-update-cmd` script to your `composer.json`:
-
-```json
+```php
+public function boot(): void
 {
-    "scripts": {
-        "post-update-cmd": [
-            "@php -r \"@mkdir('bin', 0755, true);\"",
-            "@php -r \"copy('vendor/mathiasgrimm/laravel-cloud-binaries/bin/jpegoptim', 'bin/jpegoptim');\"",
-            "@php -r \"copy('vendor/mathiasgrimm/laravel-cloud-binaries/bin/optipng', 'bin/optipng');\"",
-            "@php -r \"copy('vendor/mathiasgrimm/laravel-cloud-binaries/bin/pngquant', 'bin/pngquant');\""
-        ]
+    if (PHP_OS_FAMILY === 'Linux' && php_uname('m') === 'x86_64') {
+        putenv('PATH='.base_path('vendor/mathiasgrimm/ubuntu-binaries/bin').PATH_SEPARATOR.getenv('PATH'));
     }
 }
 ```
 
-After every `composer update`, the selected binaries are copied into `bin/` automatically. Adjust the list to include only the binaries you need. The `@php -r` syntax ensures the commands work on all platforms (Linux, macOS, and Windows).
+This exposes executable names to PHP child commands in web requests, queue workers and Artisan. ImageMagick delegates are one example. PATH cannot override a hardcoded absolute executable path. Restart long-running workers after deployment.
 
-## Prefer not to ship binaries at all?
+Keep the package as a production dependency when deploying with `composer install --no-dev`. No copying into your application repository or post-update hook is required.
 
-This package runs optimization on your own infrastructure, which is the right
-trade-off when you want no external dependency and no per-image cost.
+## Versions
 
-If you would rather not ship ~91 MB of executables, [Glimpse](https://glimpseimg.com)
-does the same kind of work — optimize, convert, resize, thumbnail — over an HTTP
-API, with a CLI and a PHP SDK and nothing to compile:
+Latest stable upstream tool releases checked on 2026-10-01. Tags and source revisions are recorded in `versions.json`; build versions are in `Makefile`. `artifacts.json` records the shipped executable sizes and SHA-256 hashes.
 
-```bash
-composer require mathiasgrimm/glimpse-cli
+| Component | Version |
+|---|---|
+| jpegoptim | v1.5.6 |
+| pngquant | 3.0.3 |
+| libwebp | v1.6.0 |
+| libavif | v1.4.2 |
+| gifsicle | v1.96 |
+| ffmpeg | n9.0.2 |
+| imagemagick | 7.1.2-32 |
+| zstd | v1.5.7 |
+| qpdf | v12.4.2 |
+| dav1d | 1.5.4 |
+| optipng | 7.9.1 |
 
-glimpse optimize public/images/hero.png --in-place
-glimpse convert public/images/hero.png --format=avif --optimize -i
-```
+libavif includes the upstream grid metadata fix, so no backport is applied. AOM encodes AVIF; dav1d is the preferred decoder, with AOM available explicitly. Grid encoding preserves metadata and exact image dimensions; it does not imply lossless encoding.
 
-The trade-off is the obvious one: images are processed by a third-party service
-rather than locally, so it needs network access, and anything beyond the
-`analyze`/`check` endpoints requires an API token. Pick whichever fits — locally
-executed binaries, or a managed API.
+FFmpeg includes WebP encoding for ImageMagick delegates. For pixel-exact APNG intermediate frames, retain ImageMagick's `video:intermediate-format=pam` setting: a WebP intermediate may be lossy depending on the ImageMagick delegate.
 
-This repository uses Glimpse itself, in CI, to keep its own banner optimized.
+Compared with libavif 1.2.1 in the Cloud package, avifdec now applies AVIF rotation and mirroring when writing PNG/JPEG pixels. It also removes the corresponding Exif orientation to avoid applying it twice. Consumers must account for this before replacing an older decoder. libavif also changed AOM quality mapping and default tuning, so application quality scales need revalidation. See the [upstream release notes](https://github.com/AOMediaCodec/libavif/releases/tag/v1.4.0).
 
-## Usage
+Upgrades can change compressed output sizes, quality and metadata behavior. The package tests cover codec availability, metadata, alpha and lossless pixel preservation, but do not establish bitstream identity across versions.
 
-After installation, the binaries are available in `vendor/bin/`:
+## Build and verify
 
-```bash
-vendor/bin/jpegoptim --strip-all image.jpg
-vendor/bin/optipng -o2 image.png
-vendor/bin/pngquant --quality=65-80 image.png
-vendor/bin/cwebp -q 80 image.png -o image.webp
-vendor/bin/dwebp image.webp -o image.png
-vendor/bin/avifenc image.png image.avif
-vendor/bin/avifdec image.avif image.png
-vendor/bin/gifsicle -O3 animation.gif -o optimized.gif
-vendor/bin/ffmpeg -i input.mp4 -c:v libx264 output.mp4
-vendor/bin/ffmpeg -i input.png -frames:v 1 -c:v libwebp output.webp
-vendor/bin/ffprobe -v quiet -print_format json -show_format input.mp4
-vendor/bin/magick input.png -resize 50% output.png
-vendor/bin/zstd -19 backup.sql -o backup.sql.zst
-vendor/bin/zstd -d backup.sql.zst
-vendor/bin/qpdf --linearize input.pdf output.pdf
-vendor/bin/qpdf --empty --pages a.pdf b.pdf -- merged.pdf
-```
+Docker must support `linux/amd64`; building on ARM64 uses emulation and can be slow.
 
-> **Note:** These are statically compiled Linux arm64 (musl) binaries. They will work on Laravel Cloud and other Linux arm64 environments but **not** on macOS, Windows, or x86-64 Linux.
-
-## Building from source
-
-### Prerequisites
-
-- [Docker](https://docs.docker.com/get-docker/)
-- `make`
-
-### Build all binaries
-
-```bash
-make
-```
-
-Binaries are output to the `bin/` directory.
-
-The AVIF Makefile target explicitly builds for `linux/arm64` and checks both ELF machine types. Other Dockerfiles build for the host architecture, so run the build on an arm64 machine (Apple Silicon, or any aarch64 Linux host) to match the architecture of the committed binaries. Builds are not byte-for-byte reproducible; the Dockerfiles track `alpine:latest` and unpinned apk packages, so builds are not fully pinned. AVIF additionally pins the dav1d source version and commit. For tools without an ARM64 build check, select a different architecture with Docker's `--platform` option, for example `docker build --platform linux/amd64 ...`. Emulated builds are considerably slower.
-
-### Build a single binary
-
-```bash
-make bin/jpegoptim
-make bin/optipng
-make bin/pngquant
-make bin/cwebp
-make bin/dwebp
-make bin/avifenc
-make bin/avifdec
-make bin/gifsicle
-make bin/ffmpeg
-make bin/ffprobe
-make bin/magick
-make bin/zstd
-make bin/qpdf
-```
-
-### Parallel builds
-
-```bash
-make -j4
-```
-
-### Testing
-
-Verify that all binaries work correctly by running them inside an Alpine Docker container:
-
-```bash
-make test          # build (if needed) + test
-make test-only     # test without rebuilding
-make test-avif     # focused AVIF regression checks
-```
-
-The AVIF tests verify both committed binaries are stripped static ARM64 ELF files
-without a dynamic interpreter or shared dependencies. Generated fixtures cover
-8/10/12-bit, RGB/alpha, 4:2:0/4:4:4 and 2x2 grids. They assert dav1d is selected
-when `--codec` is omitted, compare every decoded RGBA sample against explicit
-dav1d and AOM, and check default/explicit AOM encoding and a lossless RGBA round trip.
-
-The other tests encode and decode a real WebP image, then generate a three-frame APNG
-and run ImageMagick 7.1.2-31's ffmpeg delegate command with WebP intermediates.
-They also exercise the bundled ImageMagick's APNG delegate and check PAM
-intermediates for older ImageMagick delegates. FFmpeg links
-libwebp statically; the separate `cwebp` and `dwebp` executables are not needed
-for its WebP encoder. No `video:intermediate-format=pam` override is required
-for decoding. ImageMagick 7.1.2-31's default WebP intermediate is lossy; use
-`-define video:intermediate-format=pam` when you need pixel-exact frames.
-
-To rebuild both ffmpeg artifacts after changing their build configuration:
-
-```bash
-make -B bin/ffmpeg
+```sh
+make all
 make test-only
 ```
 
-The ffmpeg build extracts both `bin/ffmpeg` and `bin/ffprobe` and uses the same
-`LIBWEBP_VERSION` pin as the standalone WebP tools.
+All build and test commands explicitly select AMD64. Build images and temporary containers use an `ubuntu-binaries` namespace to avoid colliding with the original package. `make clean` removes this checkout's generated binaries. Changing pinned versions requires rebuilding the affected binaries.
 
-### Clean up
-
-```bash
-make clean          # remove bin/ contents
-make clean-images   # remove Docker images
-make clean-all      # both
-```
+Tests run in Ubuntu 24.04 and exercise actual encoding/decoding, AVIF grid metadata, decoder pixel parity, FFmpeg WebP/APNG delegates and all executable versions. Architecture and static-link checks reject artifacts for the wrong platform or requiring shared libraries.
 
 ## Licensing
 
-The MIT license in `LICENSE` covers only this repository's build scripts and
-documentation. The binaries in `bin/` are built from third-party projects and keep
-their own licenses — **`jpegoptim`, `pngquant`, `gifsicle`, `ffmpeg`, and `ffprobe` are
-GPL**. `ffmpeg`/`ffprobe` are built with `--enable-gpl`, `--enable-libx264`, and
-`--enable-libx265`, which per FFmpeg's own `LICENSE.md` changes its license from
-LGPL-2.1+ to GPL-2.0+.
-
-`qpdf` is Apache-2.0. It carries an upstream `NOTICE` file, reproduced in
-[`licenses/qpdf-NOTICE.txt`](licenses/qpdf-NOTICE.txt), which redistributors must pass
-along. It also contains code derived from the RSA Data Security, Inc. MD5 Message-Digest
-Algorithm, whose license requires exactly that identification wherever the derived work is
-referenced — see [`licenses/RSA-MD.txt`](licenses/RSA-MD.txt).
-
-If you are only *using* these binaries in your own application, the GPL imposes no
-obligations on you — running a program is not distribution. If you **redistribute**
-them, whether directly or bundled into a product you ship, read
-[`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md) first. It lists the license for
-every binary and its statically linked components, and includes the
-corresponding-source offer.
-
-Full license texts are in [`licenses/`](licenses/).
-
-## How it works
-
-Each tool has its own Dockerfile under `<tool>/Dockerfile`. The Dockerfiles use multi-stage Alpine builds:
-
-1. **Builder stage** — installs dependencies, clones source, compiles with static linking flags, then strips symbol tables (these are shipped artifacts, not debugging targets)
-2. **Final stage** — `FROM scratch`, copies only the static binary
-
-The Makefile orchestrates building the Docker images and extracting the binaries into `bin/`.
+See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and `licenses/`. Individual binaries have their own licenses. Build recipes and source references are included alongside the artifacts.

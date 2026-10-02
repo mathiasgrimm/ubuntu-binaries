@@ -1,0 +1,62 @@
+{
+  "checked_on": "2026-10-01",
+  "target": "Ubuntu 24.04 AMD64",
+  "sources": {
+    "jpegoptim": {
+      "version": "v1.5.6",
+      "commit": "d0c79a8eb4cac61d1d4797ad93d8a49ffdb1ec29",
+      "source": "https://github.com/tjko/jpegoptim"
+    },
+    "pngquant": {
+      "version": "3.0.3",
+      "commit": "53a332a58f44357b6b41842a54d74aa1e245913d",
+      "source": "https://github.com/kornelski/pngquant"
+    },
+    "libwebp": {
+      "version": "v1.6.0",
+      "commit": "4fa21912338357f89e4fd51cf2368325b59e9bd9",
+      "source": "https://github.com/webmproject/libwebp"
+    },
+    "libavif": {
+      "version": "v1.4.2",
+      "commit": "c5240fc79fe5c2407e10afd35f5505ef6333ea49",
+      "source": "https://github.com/AOMediaCodec/libavif"
+    },
+    "gifsicle": {
+      "version": "v1.96",
+      "commit": "a08e0f6686d467bb8b9e4715b1f1835f12984fb0",
+      "source": "https://github.com/kohler/gifsicle"
+    },
+    "ffmpeg": {
+      "version": "n9.0.2",
+      "commit": "946fcce07b6dcd0331c8cc609192aeff5e1924f8",
+      "source": "https://github.com/FFmpeg/FFmpeg"
+    },
+    "imagemagick": {
+      "version": "7.1.2-32",
+      "commit": "ad98b244c995d2e3051757fa3b7855f45b550d24",
+      "source": "https://github.com/ImageMagick/ImageMagick"
+    },
+    "zstd": {
+      "version": "v1.5.7",
+      "commit": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+      "source": "https://github.com/facebook/zstd"
+    },
+    "qpdf": {
+      "version": "v12.4.2",
+      "commit": "4eba95899886e851cc41d76886483b347612f2a8",
+      "source": "https://github.com/qpdf/qpdf"
+    },
+    "dav1d": {
+      "version": "1.5.4",
+      "commit": "54706fc6bc0cdecab7e9593974a4039cc038fca7",
+      "source": "https://code.videolan.org/videolan/dav1d"
+    },
+    "optipng": {
+      "version": "7.9.1",
+      "source": "https://optipng.sourceforge.net/",
+      "sha256": "c2579be58c2c66dae9d63154edcb3d427fef64cb00ec0aff079c9d156ec46f29",
+      "archive": "https://sourceforge.net/projects/optipng/files/OptiPNG/optipng-7.9.1/optipng-7.9.1.tar.gz/download"
+    }
+  }
+}
