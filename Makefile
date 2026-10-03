@@ -11,6 +11,8 @@ FFMPEG_VERSION := n9.0.2
 IMAGEMAGICK_VERSION := 7.1.2-32
 ZSTD_VERSION         := v1.5.7
 QPDF_VERSION := v12.4.2
+LCMS2_VERSION := lcms2.19.1
+LCMS2_COMMIT := 21c582a594fe5279f90c0b93437c398f93bf62b0
 # ────────────────────────────────────────────────────────────
 
 BINARIES := bin/jpegoptim bin/optipng bin/pngquant bin/cwebp bin/dwebp bin/avifenc bin/avifdec bin/gifsicle bin/ffmpeg bin/ffprobe bin/magick bin/zstd bin/qpdf
@@ -88,7 +90,7 @@ bin/ffmpeg bin/ffprobe: ffmpeg/Dockerfile Makefile
 # --- magick ---
 bin/magick: imagemagick/Dockerfile Makefile
 	mkdir -p bin
-	docker build --platform linux/amd64 --build-arg VERSION=$(IMAGEMAGICK_VERSION) -t ubuntu-binaries-imagemagick ./imagemagick
+	docker build --platform linux/amd64 --build-arg VERSION=$(IMAGEMAGICK_VERSION) --build-arg LCMS2_VERSION=$(LCMS2_VERSION) --build-arg LCMS2_COMMIT=$(LCMS2_COMMIT) -t ubuntu-binaries-imagemagick ./imagemagick
 	docker rm -f tmp-ubuntu-imagemagick 2>/dev/null || true
 	docker create --name tmp-ubuntu-imagemagick ubuntu-binaries-imagemagick /true
 	docker cp tmp-ubuntu-imagemagick:/magick bin/magick
@@ -123,7 +125,7 @@ test-avif: test-runtime
 	docker run --rm --platform linux/amd64 -v "$(CURDIR)/bin:/opt/bin:ro" -v "$(CURDIR)/tests:/opt/tests:ro" ubuntu-binaries-tests sh -c 'sh /opt/tests/avif.sh && python3 /opt/tests/avif-grid-metadata.py'
 
 test-only: test-avif
-	docker run --rm --platform linux/amd64 -v "$(CURDIR)/bin:/opt/bin:ro" -v "$(CURDIR)/tests:/opt/tests:ro" ubuntu-binaries-tests sh -c 'sh /opt/tests/smoke.sh && sh /opt/tests/ffmpeg-webp.sh && php /opt/tests/imagick.php'
+	docker run --rm --platform linux/amd64 -v "$(CURDIR)/bin:/opt/bin:ro" -v "$(CURDIR)/tests:/opt/tests:ro" ubuntu-binaries-tests sh -c 'sh /opt/tests/smoke.sh && sh /opt/tests/ffmpeg-webp.sh && php /opt/tests/imagick.php && python3 /opt/tests/icc-conversion.py'
 
 # --- Cleanup ---
 clean:

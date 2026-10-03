@@ -45,7 +45,7 @@ Keep the package as a production dependency when deploying with `composer instal
 
 ## Versions
 
-Latest stable upstream tool releases checked on 2026-10-01. Tags and source revisions are recorded in `versions.json`; build versions are in `Makefile`. `artifacts.json` records the shipped executable sizes and SHA-256 hashes.
+Latest stable upstream tool releases checked on 2026-10-01. Little CMS was checked on 2026-10-02. Tags and source revisions are recorded in `versions.json`; build versions are in `Makefile`. `artifacts.json` records the shipped executable sizes and SHA-256 hashes.
 
 | Component | Version |
 |---|---|
@@ -60,10 +60,13 @@ Latest stable upstream tool releases checked on 2026-10-01. Tags and source revi
 | qpdf | v12.4.2 |
 | dav1d | 1.5.4 |
 | optipng | 7.9.1 |
+| Little CMS (in magick) | 2.19.1 |
 
 libavif includes the upstream grid metadata fix, so no backport is applied. AOM encodes AVIF; dav1d is the preferred decoder, with AOM available explicitly. Grid encoding preserves metadata and exact image dimensions; it does not imply lossless encoding.
 
 FFmpeg includes WebP encoding for ImageMagick delegates. For pixel-exact APNG intermediate frames, retain ImageMagick's `video:intermediate-format=pam` setting: a WebP intermediate may be lossy depending on the ImageMagick delegate.
+
+ImageMagick includes Little CMS. With an embedded ICC profile, `-profile` converts the pixels to the new profile. Without Little CMS, it only attached the new profile and kept the pixels. An image without an embedded profile keeps its pixels and gets the new profile.
 
 Compared with libavif 1.2.1 in the Cloud package, avifdec now applies AVIF rotation and mirroring when writing PNG/JPEG pixels. It also removes the corresponding Exif orientation to avoid applying it twice. Consumers must account for this before replacing an older decoder. libavif also changed AOM quality mapping and default tuning, so application quality scales need revalidation. See the [upstream release notes](https://github.com/AOMediaCodec/libavif/releases/tag/v1.4.0).
 
@@ -80,7 +83,7 @@ make test-only
 
 All build and test commands explicitly select AMD64. Build images and temporary containers use an `ubuntu-binaries` namespace to avoid colliding with the original package. `make clean` removes this checkout's generated binaries. Changing pinned versions requires rebuilding the affected binaries.
 
-Tests run in Ubuntu 24.04 and exercise actual encoding/decoding, AVIF grid metadata, decoder pixel parity, FFmpeg WebP/APNG delegates and all executable versions. Architecture and static-link checks reject artifacts for the wrong platform or requiring shared libraries.
+Tests run in Ubuntu 24.04 and exercise actual encoding/decoding, AVIF grid metadata, decoder pixel parity, FFmpeg WebP/APNG delegates and all executable versions. They also convert saturated Display P3 colors to sRGB and check the resulting pixel values. Architecture and static-link checks reject artifacts for the wrong platform or requiring shared libraries.
 
 ## Licensing
 

@@ -22,6 +22,7 @@ gifsicle --version
 ffmpeg -version
 ffprobe -version
 magick -version
+magick -version | grep -Eq '^Delegates \(built-in\):.* lcms( |$)'
 zstd --version
 qpdf --version
 magick -size 48x32 gradient:red-blue -depth 8 "$tmp/input.png"

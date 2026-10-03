@@ -57,6 +57,12 @@
       "source": "https://optipng.sourceforge.net/",
       "sha256": "c2579be58c2c66dae9d63154edcb3d427fef64cb00ec0aff079c9d156ec46f29",
       "archive": "https://sourceforge.net/projects/optipng/files/OptiPNG/optipng-7.9.1/optipng-7.9.1.tar.gz/download"
+    },
+    "lcms2": {
+      "version": "lcms2.19.1",
+      "commit": "21c582a594fe5279f90c0b93437c398f93bf62b0",
+      "source": "https://github.com/mm2/Little-CMS",
+      "checked_on": "2026-10-02"
     }
   }
 }

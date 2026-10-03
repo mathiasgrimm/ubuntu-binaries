@@ -94,12 +94,12 @@ dependencies. The notable ones, by binary:
 |--------|------------------------------|
 | `jpegoptim` | libjpeg-turbo (`IJG AND BSD-3-Clause AND Zlib`) |
 | `optipng` | libpng (`Libpng`), zlib (`Zlib`), cexcept (`Zlib`, [license](licenses/cexcept.txt)), minitiff/pnmio (`BSL-1.0`, [license](licenses/BSL-1.0.txt)) |
-| `pngquant` | libpng, zlib, Little CMS (`MIT`) |
+| `pngquant` | libpng, zlib, Little CMS (`MIT`, [license](licenses/lcms2.txt)), from the Alpine `lcms2-static` package at pngquant's build time, not the pinned 2.19.1 used by `magick` |
 | `cwebp`, `dwebp` | libpng, libjpeg-turbo, giflib (`MIT`), zlib |
 | `avifenc`, `avifdec` | dav1d `1.5.4` (`BSD-2-Clause`, [license](licenses/dav1d.txt)), libaom (`BSD-2-Clause` + AOM patent license), libargparse (`MIT`, [license](licenses/libargparse.txt)), libpng, libjpeg-turbo, zlib |
 | `gifsicle` | - |
 | `ffmpeg`, `ffprobe` | x264 (`GPL-2.0-or-later`), x265 `4.1` (`GPL-2.0`), libvpx `v1.15.0` (`BSD-3-Clause`), Opus `v1.5.2` (`BSD-3-Clause`), libwebp `v1.6.0` (`BSD-3-Clause`, [license](licenses/libwebp.txt)), LAME (`LGPL-2.1-or-later`), FreeType (`FTL OR GPL-2.0-or-later`), libpng, zlib, bzip2 (`bzip2-1.0.6`), Brotli (`MIT`) |
-| `magick` | libjpeg-turbo, libpng, libwebp, FreeType, libxml2 (`MIT`), libtiff `v4.7.0`, zlib, xz/liblzma (`0BSD`), bzip2, Brotli |
+| `magick` | Little CMS `2.19.1` (`MIT`, [license](licenses/lcms2.txt)), libjpeg-turbo, libpng, libwebp, FreeType, libxml2 (`MIT`), libtiff `v4.7.0`, zlib, xz/liblzma (`0BSD`), bzip2, Brotli |
 | `zstd` | zlib, xz/liblzma, LZ4 (`BSD-2-Clause`) |
 | `qpdf` | zlib, libjpeg-turbo, and qpdf's built-in crypto provider: Rijndael/AES (public domain), sha2 from sphlib (`MIT`), MD5 derived from the RSA Data Security, Inc. MD5 Message-Digest Algorithm (`RSA-MD`) |
 
@@ -116,7 +116,7 @@ the Independent Modules", so their presence adds no copyleft obligation of its o
 Unversioned components above are the Alpine Linux packages current at build time; the
 `alpine:3.23` base image and its `apk` packages are not pinned, so exact versions
 vary by build date. Primary upstream tool versions and the dav1d version/commit are pinned in the
-`Makefile`. The [AVIF build record](avifenc/BUILD.md) lists the dependency versions
+`Makefile`, as are the Little CMS tag and commit. Its Dockerfile verifies that commit. The [AVIF build record](avifenc/BUILD.md) lists the dependency versions
 used for the shipped AVIF artifacts.
 
 ## Source code
