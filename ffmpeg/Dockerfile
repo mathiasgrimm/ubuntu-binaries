@@ -74,6 +74,31 @@ RUN git clone --depth 1 --branch ${LIBWEBP_VERSION} https://chromium.googlesourc
       -DWEBP_BUILD_EXTRAS=OFF && \
     cmake --build build -j$(nproc) && cmake --install build
 
+# Build libvmaf from source (static) for the libvmaf filter. Floating-point
+# features provide float_ssim and float_ms_ssim; built-in models need xxd.
+# Its build tools are installed here so the earlier layers stay unchanged.
+# A static-only Meson build lists -pthread -lm in Libs; add its C++ runtime too.
+ARG LIBVMAF_VERSION
+ARG LIBVMAF_COMMIT
+RUN apk add --no-cache meson ninja xxd && \
+    git clone --depth 1 --branch ${LIBVMAF_VERSION} https://github.com/Netflix/vmaf.git /src/vmaf && \
+    test "$(git -C /src/vmaf rev-parse HEAD)" = "${LIBVMAF_COMMIT}" && \
+    cd /src/vmaf && \
+    meson setup build libvmaf \
+      --buildtype=release \
+      --default-library=static \
+      --prefix=/usr/local \
+      --libdir=lib \
+      -Denable_tests=false \
+      -Denable_docs=false \
+      -Denable_tools=false \
+      -Denable_float=true \
+      -Dbuilt_in_models=true && \
+    ninja -C build install && \
+    sed -i 's/^Libs:.*/& -lstdc++/' /usr/local/lib/pkgconfig/libvmaf.pc && \
+    grep -q '^Libs:.*-lstdc++' /usr/local/lib/pkgconfig/libvmaf.pc && \
+    cat /usr/local/lib/pkgconfig/libvmaf.pc
+
 ARG VERSION
 RUN git clone --depth 1 --branch ${VERSION} https://github.com/FFmpeg/FFmpeg.git /src/ffmpeg
 
@@ -91,6 +116,7 @@ RUN PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig:$PKG_CO
       --enable-libmp3lame \
       --enable-libfreetype \
       --enable-libwebp \
+      --enable-libvmaf \
       --extra-cflags="-I/usr/local/include" \
       --extra-ldflags="-static -L/usr/local/lib -L/usr/local/lib64" \
       --pkg-config-flags="--static" \

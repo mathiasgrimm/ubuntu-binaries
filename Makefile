@@ -11,11 +11,15 @@ FFMPEG_VERSION := n9.0.2
 IMAGEMAGICK_VERSION := 7.1.2-32
 ZSTD_VERSION         := v1.5.7
 QPDF_VERSION := v12.4.2
+LIBJXL_VERSION := v0.12.0
+LIBJXL_COMMIT := a7a9c787341cf703dede03c2009fa460cae5e5df
+LIBVMAF_VERSION := v3.2.1
+LIBVMAF_COMMIT := f85a853692a8c730d0270cd733c8bb30b5b93b7c
 LCMS2_VERSION := lcms2.19.1
 LCMS2_COMMIT := 21c582a594fe5279f90c0b93437c398f93bf62b0
 # ────────────────────────────────────────────────────────────
 
-BINARIES := bin/jpegoptim bin/optipng bin/pngquant bin/cwebp bin/dwebp bin/avifenc bin/avifdec bin/gifsicle bin/ffmpeg bin/ffprobe bin/magick bin/zstd bin/qpdf
+BINARIES := bin/jpegoptim bin/optipng bin/pngquant bin/cwebp bin/dwebp bin/avifenc bin/avifdec bin/gifsicle bin/ffmpeg bin/ffprobe bin/magick bin/zstd bin/qpdf bin/ssimulacra2 bin/butteraugli_main
 
 .PHONY: all test test-only test-avif clean clean-images clean-all
 
@@ -80,7 +84,7 @@ bin/gifsicle: gifsicle/Dockerfile Makefile
 # --- ffmpeg + ffprobe (single image, two binaries) ---
 bin/ffmpeg bin/ffprobe: ffmpeg/Dockerfile Makefile
 	mkdir -p bin
-	docker build --platform linux/amd64 --build-arg VERSION=$(FFMPEG_VERSION) --build-arg LIBWEBP_VERSION=$(LIBWEBP_VERSION) -t ubuntu-binaries-ffmpeg ./ffmpeg
+	docker build --platform linux/amd64 --build-arg VERSION=$(FFMPEG_VERSION) --build-arg LIBWEBP_VERSION=$(LIBWEBP_VERSION) --build-arg LIBVMAF_VERSION=$(LIBVMAF_VERSION) --build-arg LIBVMAF_COMMIT=$(LIBVMAF_COMMIT) -t ubuntu-binaries-ffmpeg ./ffmpeg
 	docker rm -f tmp-ubuntu-ffmpeg 2>/dev/null || true
 	docker create --name tmp-ubuntu-ffmpeg ubuntu-binaries-ffmpeg /true
 	docker cp tmp-ubuntu-ffmpeg:/ffmpeg bin/ffmpeg
@@ -114,6 +118,16 @@ bin/qpdf: qpdf/Dockerfile Makefile
 	docker cp tmp-ubuntu-qpdf:/qpdf bin/qpdf
 	docker rm tmp-ubuntu-qpdf
 
+# --- ssimulacra2 + butteraugli_main (single image, two binaries) ---
+bin/ssimulacra2 bin/butteraugli_main: libjxl/Dockerfile Makefile
+	mkdir -p bin
+	docker build --platform linux/amd64 --build-arg VERSION=$(LIBJXL_VERSION) --build-arg COMMIT=$(LIBJXL_COMMIT) -t ubuntu-binaries-libjxl ./libjxl
+	docker rm -f tmp-ubuntu-libjxl 2>/dev/null || true
+	docker create --name tmp-ubuntu-libjxl ubuntu-binaries-libjxl /true
+	docker cp tmp-ubuntu-libjxl:/ssimulacra2 bin/ssimulacra2
+	docker cp tmp-ubuntu-libjxl:/butteraugli_main bin/butteraugli_main
+	docker rm tmp-ubuntu-libjxl
+
 # --- Test on the supported Ubuntu runtime ---
 .PHONY: test-runtime
 test-runtime:
@@ -125,13 +139,13 @@ test-avif: test-runtime
 	docker run --rm --platform linux/amd64 -v "$(CURDIR)/bin:/opt/bin:ro" -v "$(CURDIR)/tests:/opt/tests:ro" ubuntu-binaries-tests sh -c 'sh /opt/tests/avif.sh && python3 /opt/tests/avif-grid-metadata.py'
 
 test-only: test-avif
-	docker run --rm --platform linux/amd64 -v "$(CURDIR)/bin:/opt/bin:ro" -v "$(CURDIR)/tests:/opt/tests:ro" ubuntu-binaries-tests sh -c 'sh /opt/tests/smoke.sh && sh /opt/tests/ffmpeg-webp.sh && php /opt/tests/imagick.php && python3 /opt/tests/icc-conversion.py'
+	docker run --rm --platform linux/amd64 -v "$(CURDIR)/bin:/opt/bin:ro" -v "$(CURDIR)/tests:/opt/tests:ro" ubuntu-binaries-tests sh -c 'sh /opt/tests/smoke.sh && sh /opt/tests/ffmpeg-webp.sh && php /opt/tests/imagick.php && python3 /opt/tests/icc-conversion.py && python3 /opt/tests/quality-metrics.py'
 
 # --- Cleanup ---
 clean:
 	find bin -mindepth 1 ! -name .gitkeep -delete
 
 clean-images:
-	docker rmi -f ubuntu-binaries-jpegoptim ubuntu-binaries-optipng ubuntu-binaries-pngquant ubuntu-binaries-cwebp ubuntu-binaries-avifenc ubuntu-binaries-gifsicle ubuntu-binaries-ffmpeg ubuntu-binaries-imagemagick ubuntu-binaries-zstd ubuntu-binaries-qpdf 2>/dev/null || true
+	docker rmi -f ubuntu-binaries-jpegoptim ubuntu-binaries-optipng ubuntu-binaries-pngquant ubuntu-binaries-cwebp ubuntu-binaries-avifenc ubuntu-binaries-gifsicle ubuntu-binaries-ffmpeg ubuntu-binaries-imagemagick ubuntu-binaries-zstd ubuntu-binaries-qpdf ubuntu-binaries-libjxl 2>/dev/null || true
 
 clean-all: clean clean-images

@@ -4,7 +4,7 @@ BIN_DIR=${BIN_DIR:-/opt/bin}
 export PATH="$BIN_DIR:$PATH"
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT HUP INT TERM
-for binary in jpegoptim optipng pngquant cwebp dwebp avifenc avifdec gifsicle ffmpeg ffprobe magick zstd qpdf; do
+for binary in jpegoptim optipng pngquant cwebp dwebp avifenc avifdec gifsicle ffmpeg ffprobe magick zstd qpdf ssimulacra2 butteraugli_main; do
     file "$BIN_DIR/$binary" | grep -Eq 'x86-64.*(statically linked|static-pie linked).*stripped$'
     readelf -h "$BIN_DIR/$binary" | grep -q 'Machine:.*Advanced Micro Devices X86-64'
     if readelf -l "$BIN_DIR/$binary" | grep -q INTERP || readelf -d "$BIN_DIR/$binary" | grep -q NEEDED; then
@@ -25,6 +25,11 @@ magick -version
 magick -version | grep -Eq '^Delegates \(built-in\):.* lcms( |$)'
 zstd --version
 qpdf --version
+# The libjxl metric tools have no version flag; both print usage and fail without inputs.
+! ssimulacra2 > "$tmp/usage" 2>&1
+grep -q 'Usage' "$tmp/usage"
+! butteraugli_main > "$tmp/usage" 2>&1
+grep -q 'Usage' "$tmp/usage"
 magick -size 48x32 gradient:red-blue -depth 8 "$tmp/input.png"
 magick "$tmp/input.png" -depth 8 "rgb:$tmp/original.rgb"
 cp "$tmp/input.png" "$tmp/optimized.png"
@@ -55,4 +60,4 @@ PYTHON
 qpdf "$tmp/input.pdf" "$tmp/rewritten.pdf"
 qpdf --check "$tmp/rewritten.pdf"
 test "$(qpdf --show-npages "$tmp/rewritten.pdf")" = 1
-echo 'All 13 AMD64 static tools and format smoke checks passed'
+echo 'All 15 AMD64 static tools and format smoke checks passed'
