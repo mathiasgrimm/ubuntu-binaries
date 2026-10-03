@@ -24,6 +24,7 @@ corresponding source available. See [Source code](#source-code) below.
 | `magick` | [ImageMagick](https://github.com/ImageMagick/ImageMagick) | `7.1.2-32` | `ImageMagick` | [imagemagick.txt](licenses/imagemagick.txt) |
 | `zstd` | [facebook/zstd](https://github.com/facebook/zstd) | `v1.5.7` | `BSD-3-Clause` | [zstd.txt](licenses/zstd.txt) |
 | `qpdf` | [qpdf/qpdf](https://github.com/qpdf/qpdf) | `v12.4.2` | `Apache-2.0` | [Apache-2.0.txt](licenses/Apache-2.0.txt), [RSA-MD.txt](licenses/RSA-MD.txt) |
+| `ssimulacra2`, `butteraugli_main` | [libjxl/libjxl](https://github.com/libjxl/libjxl) | `v0.12.0` | `BSD-3-Clause` + patent grant | [libjxl.txt](licenses/libjxl.txt) |
 
 ### Why ffmpeg and ffprobe are GPL, not LGPL
 
@@ -40,6 +41,9 @@ Additionally, x264 is `GPL-2.0-or-later` and x265 is `GPL-2.0`. Because x265 doe
 offer the "or later" option, the practical effect for the combined `ffmpeg` and
 `ffprobe` binaries shipped here is GPL-2.0. Commercial licenses for x264 and x265 are
 available from their respective vendors if you need to avoid the GPL.
+
+The linked libvmaf is `BSD-2-Clause-Patent`, a permissive license with a patent grant that is designed to be
+compatible with GPL-2.0. It does not change the license of the combined binaries.
 
 ### qpdf is Apache-2.0, and carries a NOTICE
 
@@ -94,17 +98,19 @@ dependencies. The notable ones, by binary:
 |--------|------------------------------|
 | `jpegoptim` | libjpeg-turbo (`IJG AND BSD-3-Clause AND Zlib`) |
 | `optipng` | libpng (`Libpng`), zlib (`Zlib`), cexcept (`Zlib`, [license](licenses/cexcept.txt)), minitiff/pnmio (`BSL-1.0`, [license](licenses/BSL-1.0.txt)) |
-| `pngquant` | libpng, zlib, Little CMS (`MIT`) |
+| `pngquant` | libpng, zlib, Little CMS (`MIT`, [license](licenses/lcms2.txt)), from the Alpine `lcms2-static` package at pngquant's build time, not the pinned 2.19.1 used by `magick` |
 | `cwebp`, `dwebp` | libpng, libjpeg-turbo, giflib (`MIT`), zlib |
 | `avifenc`, `avifdec` | dav1d `1.5.4` (`BSD-2-Clause`, [license](licenses/dav1d.txt)), libaom (`BSD-2-Clause` + AOM patent license), libargparse (`MIT`, [license](licenses/libargparse.txt)), libpng, libjpeg-turbo, zlib |
 | `gifsicle` | - |
-| `ffmpeg`, `ffprobe` | x264 (`GPL-2.0-or-later`), x265 `4.1` (`GPL-2.0`), libvpx `v1.15.0` (`BSD-3-Clause`), Opus `v1.5.2` (`BSD-3-Clause`), libwebp `v1.6.0` (`BSD-3-Clause`, [license](licenses/libwebp.txt)), LAME (`LGPL-2.1-or-later`), FreeType (`FTL OR GPL-2.0-or-later`), libpng, zlib, bzip2 (`bzip2-1.0.6`), Brotli (`MIT`) |
-| `magick` | libjpeg-turbo, libpng, libwebp, FreeType, libxml2 (`MIT`), libtiff `v4.7.0`, zlib, xz/liblzma (`0BSD`), bzip2, Brotli |
+| `ffmpeg`, `ffprobe` | x264 (`GPL-2.0-or-later`), x265 `4.1` (`GPL-2.0`), libvpx `v1.15.0` (`BSD-3-Clause`), Opus `v1.5.2` (`BSD-3-Clause`), libwebp `v1.6.0` (`BSD-3-Clause`, [license](licenses/libwebp.txt)), libvmaf `v3.2.1` (`BSD-2-Clause-Patent` with bundled libsvm, IQA, x86inc and other code, [license](licenses/libvmaf.txt)), LAME (`LGPL-2.1-or-later`), FreeType (`FTL OR GPL-2.0-or-later`), libpng, zlib, bzip2 (`bzip2-1.0.6`), Brotli (`MIT`, [license](licenses/brotli.txt)) |
+| `magick` | Little CMS `2.19.1` (`MIT`, [license](licenses/lcms2.txt)), libjpeg-turbo, libpng, libwebp, FreeType, libxml2 (`MIT`), libtiff `v4.7.0`, zlib, xz/liblzma (`0BSD`), bzip2, Brotli |
 | `zstd` | zlib, xz/liblzma, LZ4 (`BSD-2-Clause`) |
+| `ssimulacra2`, `butteraugli_main` | Highway (`Apache-2.0 OR BSD-3-Clause`, [license](licenses/highway.txt)), skcms (`BSD-3-Clause`, [license](licenses/skcms.txt)), Brotli (`MIT`, [license](licenses/brotli.txt)), libpng, libjpeg-turbo, zlib |
 | `qpdf` | zlib, libjpeg-turbo, and qpdf's built-in crypto provider: Rijndael/AES (public domain), sha2 from sphlib (`MIT`), MD5 derived from the RSA Data Security, Inc. MD5 Message-Digest Algorithm (`RSA-MD`) |
 
-Every gcc-built binary above also contains libgcc, and `avifenc`, `avifdec`, `qpdf`, `ffmpeg` and `ffprobe`
-additionally contain libstdc++ - qpdf and libargparse use C++, and ffmpeg/ffprobe pull it in through x265.
+Every gcc-built binary above also contains libgcc, and `avifenc`, `avifdec`, `qpdf`, `ffmpeg`, `ffprobe`,
+`ssimulacra2` and `butteraugli_main` additionally contain libstdc++ - qpdf, libargparse and libjxl use C++, and
+ffmpeg/ffprobe pull it in through x265 and libvmaf.
 (`magick` is C and contains neither libstdc++ nor any other C++ runtime. `pngquant` is
 built with Rust rather than gcc, so it carries the `compiler_builtins` crate
 - `Apache-2.0 OR MIT` - in place of libgcc.) Both GCC libraries are
@@ -116,8 +122,9 @@ the Independent Modules", so their presence adds no copyleft obligation of its o
 Unversioned components above are the Alpine Linux packages current at build time; the
 `alpine:3.23` base image and its `apk` packages are not pinned, so exact versions
 vary by build date. Primary upstream tool versions and the dav1d version/commit are pinned in the
-`Makefile`. The [AVIF build record](avifenc/BUILD.md) lists the dependency versions
-used for the shipped AVIF artifacts.
+`Makefile`, as are the libjxl, libvmaf and Little CMS tags and commits. Their Dockerfiles verify those commits. The
+libjxl tag also pins its bundled Brotli, Highway and skcms submodules; `versions.json` records their commits. The
+[AVIF build record](avifenc/BUILD.md) lists the dependency versions used for the shipped AVIF artifacts.
 
 ## Source code
 

@@ -57,6 +57,29 @@
       "source": "https://optipng.sourceforge.net/",
       "sha256": "c2579be58c2c66dae9d63154edcb3d427fef64cb00ec0aff079c9d156ec46f29",
       "archive": "https://sourceforge.net/projects/optipng/files/OptiPNG/optipng-7.9.1/optipng-7.9.1.tar.gz/download"
+    },
+    "libjxl": {
+      "version": "v0.12.0",
+      "commit": "a7a9c787341cf703dede03c2009fa460cae5e5df",
+      "source": "https://github.com/libjxl/libjxl",
+      "checked_on": "2026-10-02",
+      "submodules": {
+        "brotli": "028fb5a23661f123017c060daa546b55cf4bde29",
+        "highway": "457c891775a7397bdb0376bb1031e6e027af1c48",
+        "skcms": "96d9171c94b937a1b5f0293de7309ac16311b722"
+      }
+    },
+    "libvmaf": {
+      "version": "v3.2.1",
+      "commit": "f85a853692a8c730d0270cd733c8bb30b5b93b7c",
+      "source": "https://github.com/Netflix/vmaf",
+      "checked_on": "2026-10-02"
+    },
+    "lcms2": {
+      "version": "lcms2.19.1",
+      "commit": "21c582a594fe5279f90c0b93437c398f93bf62b0",
+      "source": "https://github.com/mm2/Little-CMS",
+      "checked_on": "2026-10-02"
     }
   }
 }

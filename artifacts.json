@@ -35,16 +35,16 @@
       "sha256": "3d57bfb3aac6fd56b9f8d17669158919341903e22a1f71f5afec4b07435b2d47"
     },
     "bin/ffmpeg": {
-      "bytes": 45473144,
-      "sha256": "6d2f4fc737065849fc428622250dee7a3be749d5efb256a89c7d005f17ce9f4d"
+      "bytes": 48524120,
+      "sha256": "43b951771ae5dc2f454f11c4da32a8eea26cd7b57d13032339b226fc686734cf"
     },
     "bin/ffprobe": {
-      "bytes": 45264184,
-      "sha256": "d51afae845c8380461f93e327545f2bc4fce218d7c7e54a93e47c92e70a03e7c"
+      "bytes": 48306968,
+      "sha256": "e9b8d12e638ab1e2c93ffa72af11367e238b0819527211b2a0f09ae10faa955d"
     },
     "bin/magick": {
-      "bytes": 8816008,
-      "sha256": "f3b266a5eef59f2b2dee19840e4cb847ec5f513ae1720a1e05d2837f3b640905"
+      "bytes": 9257480,
+      "sha256": "197529efa607871edc978ae6fd97d899df1f84895bc39258e9ee3f9bd61e5298"
     },
     "bin/zstd": {
       "bytes": 1611464,
@@ -53,6 +53,14 @@
     "bin/qpdf": {
       "bytes": 3602144,
       "sha256": "d25bbeebf3aed8ea0d3b754013f726523f8f84aa30e1c4580b993b9f5cc8db8e"
+    },
+    "bin/ssimulacra2": {
+      "bytes": 7675328,
+      "sha256": "e14f7219b2783b0f228bc1cff8c3bb5f63f82a76c5f9ccc6c041be1b648f9bac"
+    },
+    "bin/butteraugli_main": {
+      "bytes": 7671272,
+      "sha256": "b82788afb5b03c9f0efb53727d1425041f70d9e7b9bb3655a82a57e2badc454f"
     }
   }
 }
